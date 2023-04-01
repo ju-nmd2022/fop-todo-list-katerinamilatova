@@ -23,15 +23,13 @@ header {
 }
 
 .container {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   align-items: center;
-  justify-items: center;
   background: #e8e1fb;
   /* view height */
-  width: 100%;
   height: 100vh;
-  gap: 10px;
 }
 
 .inputContainer {
@@ -40,8 +38,12 @@ header {
   justify-content: space-around;
   justify-items: center;
   align-items: center;
-  background: #b388eb;
-  padding: 1%;
+  background: #ac94f4;
+  padding: 0.7%;
+  border-radius: 15px;
+  margin: 0 auto;
+  margin-top: 40px;
+  margin-bottom: 20px;
 }
 
 input {
@@ -51,11 +53,35 @@ input {
 }
 input[type="text" i] {
   width: 50%;
+  border: none;
+  border: 2px solid rgb(243, 155, 243);
+  font-size: 100%;
+  color: rgb(105, 103, 103);
+}
+
+.button {
+  font-size: 100%;
+  color: rgb(105, 103, 103);
+  background-color: white;
+  border: none;
+  border: 2px solid rgb(243, 155, 243);
+}
+
+.button:hover {
+  background-color: rgb(243, 155, 243);
+  color: white;
+  border: 2px solid white;
+  cursor: pointer;
+}
+
+.tasksContainer {
+  margin: 0 auto;
 }
 
 .tasksItem {
   display: flex;
-  width: 200%;
+  height: 100px;
+  width: 600px;
   background: white;
   flex-wrap: wrap;
   justify-content: space-around;
@@ -63,7 +89,7 @@ input[type="text" i] {
   border-style: solid;
   border-color: #b388eb;
   border-width: 2px;
-  gap: 20px;
+  margin-top: 20px;
 }
 
 .tasksItem #orderNumber {
@@ -73,7 +99,7 @@ input[type="text" i] {
 .tasksItem p {
   font-size: 30px;
   color: rgb(105, 103, 103);
-  padding: 1%;
+  padding: 2px;
 }
 
 .tasksItem #orderNumber {
