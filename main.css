@@ -92,20 +92,8 @@ input[type="text" i] {
   margin-top: 20px;
 }
 
-.tasksItem #orderNumber {
-  color: white;
-}
-
 .tasksItem p {
   font-size: 30px;
   color: rgb(105, 103, 103);
   padding: 2px;
-}
-
-.tasksItem #orderNumber {
-  background: #ac94f4;
-  padding: 1%;
-  padding-left: 2.5%;
-  padding-right: 2.5%;
-  border-radius: 12px;
 }

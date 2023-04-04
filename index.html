@@ -16,20 +16,21 @@
     </header>
     <main class="container">
       <div class="inputContainer">
-        <input type="text" id="inputElement field" />
+        <input type="text" id="inputElement" />
         <input
           type="button"
+          onclick="buttonAddClicked()"
           id="inputElement button"
           value="Add"
           class="button"
         />
       </div>
-      <div class="tasksContainer">
-        <div class="tasksItem">
-          <p id="orderNumber">1</p>
+      <div class="tasksContainer" id="tasksContainer">
+        <!-- <div class="tasksItem">
+          <p id="tick">✔️</p>
           <p>HW: Create To-Do List</p>
           <p>🗑</p>
-        </div>
+        </div> -->
       </div>
     </main>
   </body>
