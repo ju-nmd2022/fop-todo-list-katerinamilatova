@@ -73,8 +73,6 @@ function taskChecked(task, text) {
     text.style.color = "rgb(105, 103, 103)";
     helpingVar = true;
   }
-
-  // div se hodí pod zbytek tasku, které ještě splněny nejsou
 }
 
 function loadTasksFromStorage() {
