@@ -29,17 +29,13 @@ function createTask(taskDescription) {
   newTaskBin.innerHTML = "🗑";
   newTaskDiv.appendChild(newTaskBin);
   newTaskBin.addEventListener("click", () => {
-    removeTask(newTaskDiv);
+    removeTask(newTaskDiv, taskDescription);
   });
 
   // save task to storage
   //I save the tasksDescription as a string to allTasks
   allTasks.push(taskDescription);
-  //I change the array to stringified JSON (bc local storage can save only strings)
-  let stringifiedTasks = JSON.stringify(allTasks);
-  //for a key all tasks I save the value of stringified array
-  localStorage.setItem("allTasks", stringifiedTasks);
-
+  rewriteLocalStorage();
   //in this moment I created a whole new div (with text, bin, etc)
   return newTaskDiv;
 }
@@ -55,8 +51,23 @@ function buttonAddClicked() {
   textField.value = "";
 }
 
-function removeTask(task) {
+function removeTask(task, taskDescription) {
   allTasksContainer.removeChild(task);
+  // remove item from allTasks array
+  // the following 4 lines were taken from https://stackoverflow.com/questions/5767325/how-can-i-remove-a-specific-item-from-an-array-in-javascript
+  const index = allTasks.indexOf(taskDescription);
+  if (index > -1) {
+    // only splice array when item is found
+    allTasks.splice(index, 1); // 2nd parameter means remove one item only
+  }
+  rewriteLocalStorage();
+}
+
+function rewriteLocalStorage() {
+  //I change the array to stringified JSON (bc local storage can save only strings)
+  let stringifiedTasks = JSON.stringify(allTasks);
+  //for a key all tasks I save the value of stringified array
+  localStorage.setItem("allTasks", stringifiedTasks);
 }
 
 function taskChecked(task, text) {
