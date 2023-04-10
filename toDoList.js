@@ -3,32 +3,26 @@ const buttonElement = document.getElementById("button");
 const allTasksContainer = document.getElementById("tasksContainer");
 let helpingVar = true;
 
-// array with all tasks
+let allTasks = [];
 
-function buttonAddClicked() {
-  let textField = document.getElementById("inputElement");
-  let inputElementValue = inputElement.value;
-
+function createTask(taskDescription) {
   //1. create new div (new box)
   let newTaskDiv = document.createElement("div");
   newTaskDiv.classList.add("tasksItem");
-  newTaskDiv.classList.add(inputElementValue);
-  allTasksContainer.appendChild(newTaskDiv);
 
   //tick (checked, done)
   const newTick = document.createElement("p");
   newTick.innerHTML = "✔️";
-  newTaskDiv.appendChild(newTick);
   newTick.addEventListener("click", () => {
+    //I call anynomous function which calls the function taskChecked with parameters newTaskDiv and NewTaskText
     taskChecked(newTaskDiv, newTaskText);
   });
+  newTaskDiv.appendChild(newTick);
 
-  // 2. show input as a htmlk text (innerHTML)
+  // 2. show input as a html text (innerHTML)
   let newTaskText = document.createElement("p");
-
-  newTaskText.innerHTML = inputElementValue;
+  newTaskText.innerHTML = taskDescription;
   newTaskDiv.appendChild(newTaskText);
-  textField.value = "";
 
   //bin
   const newTaskBin = document.createElement("p");
@@ -37,6 +31,28 @@ function buttonAddClicked() {
   newTaskBin.addEventListener("click", () => {
     removeTask(newTaskDiv);
   });
+
+  // save task to storage
+  //I save the tasksDescription as a string to allTasks
+  allTasks.push(taskDescription);
+  //I change the array to stringified JSON (bc local storage can save only strings)
+  let stringifiedTasks = JSON.stringify(allTasks);
+  //for a key all tasks I save the value of stringified array
+  localStorage.setItem("allTasks", stringifiedTasks);
+
+  //in this moment I created a whole new div (with text, bin, etc)
+  return newTaskDiv;
+}
+
+function buttonAddClicked() {
+  let textField = document.getElementById("inputElement");
+  let inputElementValue = inputElement.value;
+
+  let newTaskDiv = createTask(inputElementValue);
+
+  allTasksContainer.appendChild(newTaskDiv);
+  // empty the text field
+  textField.value = "";
 }
 
 function removeTask(task) {
@@ -59,4 +75,19 @@ function taskChecked(task, text) {
   }
 
   // div se hodí pod zbytek tasku, které ještě splněny nejsou
+}
+
+function loadTasksFromStorage() {
+  let allTasksString = localStorage.getItem("allTasks");
+  let allTasksParsed = JSON.parse(allTasksString);
+
+  //this is to avoid a warning in console about allTasksParsed having zero lenght
+  if (allTasksParsed.length === 0) {
+    return;
+  }
+
+  for (let i = 0; i < allTasksParsed.length; i++) {
+    let task = createTask(allTasksParsed[i]);
+    allTasksContainer.appendChild(task);
+  }
 }
