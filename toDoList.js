@@ -5,7 +5,7 @@ let helpingVar = true;
 
 let allTasks = [];
 
-function createTask(taskDescription) {
+function createTask(taskDescription, done) {
   //1. create new div (new box)
   let newTaskDiv = document.createElement("div");
   newTaskDiv.classList.add("tasksItem");
@@ -14,14 +14,21 @@ function createTask(taskDescription) {
   const newTick = document.createElement("p");
   newTick.innerHTML = "✔️";
   newTick.addEventListener("click", () => {
-    //I call anynomous function which calls the function taskChecked with parameters newTaskDiv and NewTaskText
-    taskChecked(newTaskDiv, newTaskText);
+    // Following 6 lines were created in cooperation with Lukáš Toral
+    for (let i = 0; i < allTasks.length; i++) {
+      if (allTasks[i].desc == taskDescription) {
+        // ! negates a boolean
+        allTasks[i].done = !allTasks[i].done;
+        rewriteLocalStorage();
+        taskChecked(newTaskDiv, newTaskText, allTasks[i].done);
+      }
+    }
   });
   newTaskDiv.appendChild(newTick);
 
-  // 2. show input as a html text (innerHTML)
   let newTaskText = document.createElement("p");
   newTaskText.innerHTML = taskDescription;
+  taskChecked(newTaskDiv, newTaskText, done);
   newTaskDiv.appendChild(newTaskText);
 
   //bin
@@ -30,11 +37,12 @@ function createTask(taskDescription) {
   newTaskDiv.appendChild(newTaskBin);
   newTaskBin.addEventListener("click", () => {
     removeTask(newTaskDiv, taskDescription);
+    rewriteLocalStorage();
   });
 
   // save task to storage
   //I save the tasksDescription as a string to allTasks
-  allTasks.push(taskDescription);
+  allTasks.push({ desc: taskDescription, done: done });
   rewriteLocalStorage();
   //in this moment I created a whole new div (with text, bin, etc)
   return newTaskDiv;
@@ -44,7 +52,7 @@ function buttonAddClicked() {
   let textField = document.getElementById("inputElement");
   let inputElementValue = inputElement.value;
 
-  let newTaskDiv = createTask(inputElementValue);
+  let newTaskDiv = createTask(inputElementValue, false);
 
   allTasksContainer.appendChild(newTaskDiv);
   // empty the text field
@@ -53,14 +61,11 @@ function buttonAddClicked() {
 
 function removeTask(task, taskDescription) {
   allTasksContainer.removeChild(task);
-  // remove item from allTasks array
-  // the following 4 lines were taken from https://stackoverflow.com/questions/5767325/how-can-i-remove-a-specific-item-from-an-array-in-javascript
-  const index = allTasks.indexOf(taskDescription);
-  if (index > -1) {
-    // only splice array when item is found
-    allTasks.splice(index, 1); // 2nd parameter means remove one item only
+  for (let i = 0; i < allTasks.length; i++) {
+    if (allTasks[i].desc === taskDescription) {
+      allTasks.splice(i, 1); // 2nd parameter means remove one item only
+    }
   }
-  rewriteLocalStorage();
 }
 
 function rewriteLocalStorage() {
@@ -70,19 +75,18 @@ function rewriteLocalStorage() {
   localStorage.setItem("allTasks", stringifiedTasks);
 }
 
-function taskChecked(task, text) {
-  if (helpingVar === true) {
+function taskChecked(task, text, done) {
+  console.log(text);
+  if (done === true) {
     // text will get crossed out and the colours will change
     task.style.backgroundColor = "#ac94f4";
     text.style.textDecoration = "line-through";
     text.style.textDecorationColor = "rgb(243, 155, 243)";
     text.style.color = "white";
-    helpingVar = false;
   } else {
     task.style.backgroundColor = "white";
     text.style.textDecoration = "none";
     text.style.color = "rgb(105, 103, 103)";
-    helpingVar = true;
   }
 }
 
@@ -96,7 +100,8 @@ function loadTasksFromStorage() {
   }
 
   for (let i = 0; i < allTasksParsed.length; i++) {
-    let task = createTask(allTasksParsed[i]);
+    let task = createTask(allTasksParsed[i].desc, allTasksParsed[i].done);
+
     allTasksContainer.appendChild(task);
   }
 }
